@@ -19,7 +19,7 @@ def main():
     for url in ['https://api.ipify.org', 'https://checkip.amazonaws.com']:
         try:
             result = subprocess.run(
-                ['curl', '--fail', '--silent', '--show-error', '--max-time', '15',
+                ['/usr/bin/curl', '--fail', '--silent', '--show-error', '--max-time', '15',
                  '--noproxy', '', '--proxy', args.proxy, url],
                 capture_output=True, text=True, check=True, timeout=20)
             actual = ipaddress.ip_address(result.stdout.strip())
