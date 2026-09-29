@@ -1,0 +1,29 @@
+# 合并模板；不含节点凭据。PROXY 使用当前所选节点。
+[General]
+dns-server = https://1.1.1.1/dns-query#proxy
+fallback-dns-server = https://1.0.0.1/dns-query#proxy
+dns-direct-system = false
+dns-direct-fallback-proxy = false
+
+[Rule]
+DOMAIN,checkip.amazonaws.com,PROXY
+DOMAIN,api.ipify.org,PROXY
+DOMAIN-SUFFIX,claude.ai,PROXY
+DOMAIN-SUFFIX,claude.com,PROXY
+DOMAIN-SUFFIX,claude.app,PROXY
+DOMAIN-SUFFIX,claudemcpcontent.com,PROXY
+DOMAIN-SUFFIX,anthropic.com,PROXY
+DOMAIN-SUFFIX,claudeusercontent.com,PROXY
+DOMAIN-SUFFIX,anthropicusercontent.com,PROXY
+DOMAIN-SUFFIX,flova.tv,DIRECT
+DOMAIN-SUFFIX,bilibili.com,DIRECT
+DOMAIN-SUFFIX,biliapi.com,DIRECT
+DOMAIN-SUFFIX,biliapi.net,DIRECT
+DOMAIN-SUFFIX,bilivideo.com,DIRECT
+DOMAIN-SUFFIX,bilivideo.cn,DIRECT
+DOMAIN-SUFFIX,hdslb.com,DIRECT
+DOMAIN-SUFFIX,acgvideo.com,DIRECT
+DOMAIN-SUFFIX,b23.tv,DIRECT
+DOMAIN-SUFFIX,biliimg.com,DIRECT
+DOMAIN,myip.ipip.net,DIRECT
+# 保留现有GEOIP和FINAL；本文件只提供插在它们前面的域名规则。

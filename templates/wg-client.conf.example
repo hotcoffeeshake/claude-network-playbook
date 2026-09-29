@@ -1,0 +1,14 @@
+# 电脑示例；手机要用独立密钥、PSK和<PHONE_TUNNEL_ADDRESS_CIDR>。
+[Interface]
+PrivateKey = <CLIENT_PRIVATE_KEY_LOCAL_ONLY>
+Address = <COMPUTER_TUNNEL_ADDRESS_CIDR>
+DNS = 1.1.1.1
+
+[Peer]
+PublicKey = <SERVER_PUBLIC_KEY>
+PresharedKey = <CLIENT_PRESHARED_KEY_LOCAL_ONLY>
+Endpoint = <SERVER_STATIC_IPV4>:51820
+AllowedIPs = 0.0.0.0/0, ::/0
+PersistentKeepalive = 25
+# IPv6也送入隧道；服务器须禁止IPv6转发，使IPv6外连失败。
+# 客户端是否实际接管IPv6须在目标设备验收，不能只凭配置宣称通过。

@@ -1,0 +1,17 @@
+# 占位模板，不可直接启动。NAT/转发/防火墙按实际网卡另行配置。
+[Interface]
+Address = <SERVER_TUNNEL_ADDRESS_CIDR>
+ListenPort = 51820
+PrivateKey = <SERVER_PRIVATE_KEY_LOCAL_ONLY>
+
+[Peer]
+# Computer
+PublicKey = <COMPUTER_PUBLIC_KEY>
+PresharedKey = <COMPUTER_PRESHARED_KEY_LOCAL_ONLY>
+AllowedIPs = <COMPUTER_TUNNEL_ADDRESS_CIDR>
+
+[Peer]
+# Phone: separate keys and address
+PublicKey = <PHONE_PUBLIC_KEY>
+PresharedKey = <PHONE_PRESHARED_KEY_LOCAL_ONLY>
+AllowedIPs = <PHONE_TUNNEL_ADDRESS_CIDR>

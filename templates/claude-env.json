@@ -1,0 +1,11 @@
+{
+  "env": {
+    "HTTP_PROXY": "http://127.0.0.1:1082",
+    "HTTPS_PROXY": "http://127.0.0.1:1082",
+    "http_proxy": "http://127.0.0.1:1082",
+    "https_proxy": "http://127.0.0.1:1082",
+    "NO_PROXY": "localhost,127.0.0.1,::1",
+    "no_proxy": "localhost,127.0.0.1,::1",
+    "CLAUDE_CODE_PROXY_RESOLVES_HOSTS": "1"
+  }
+}
