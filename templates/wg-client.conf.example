@@ -1,3 +1,4 @@
+# 历史 WireGuard 方案；不用于当前 Trojan/TCP/TLS 迁移。新机器请先读 docs/另一台Mac部署.md。
 # 电脑示例；手机要用独立密钥、PSK和<PHONE_TUNNEL_ADDRESS_CIDR>。
 [Interface]
 PrivateKey = <CLIENT_PRIVATE_KEY_LOCAL_ONLY>

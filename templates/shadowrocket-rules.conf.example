@@ -1,20 +1,35 @@
-# 合并模板；不含节点凭据。PROXY 使用当前所选节点。
+# 合并片段，不是可直接覆盖的完整配置。先替换 <VPS_IPV4>。
+# 先在新机器创建真实节点 MY-US-TLS-FIXED；名称必须完全一致。
+# US-FIXED 不得添加 DIRECT、其他节点、自动测速或回退分组。
 [General]
 dns-server = https://1.1.1.1/dns-query#proxy
 fallback-dns-server = https://1.0.0.1/dns-query#proxy
 dns-direct-system = false
 dns-direct-fallback-proxy = false
+udp-policy-not-supported-behaviour = REJECT
+ipv6 = true
+prefer-ipv6 = false
+
+[Proxy Group]
+US-FIXED = select, MY-US-TLS-FIXED
 
 [Rule]
-DOMAIN,checkip.amazonaws.com,PROXY
-DOMAIN,api.ipify.org,PROXY
-DOMAIN-SUFFIX,claude.ai,PROXY
-DOMAIN-SUFFIX,claude.com,PROXY
-DOMAIN-SUFFIX,claude.app,PROXY
-DOMAIN-SUFFIX,claudemcpcontent.com,PROXY
-DOMAIN-SUFFIX,anthropic.com,PROXY
-DOMAIN-SUFFIX,claudeusercontent.com,PROXY
-DOMAIN-SUFFIX,anthropicusercontent.com,PROXY
+# 防止连接自己的 VPS 再绕回代理；只填写你自己的节点 IPv4。
+IP-CIDR,<VPS_IPV4>/32,DIRECT,no-resolve
+DOMAIN,checkip.amazonaws.com,US-FIXED
+DOMAIN,api.ipify.org,US-FIXED
+DOMAIN-SUFFIX,claude.ai,US-FIXED
+DOMAIN-SUFFIX,claude.com,US-FIXED
+DOMAIN-SUFFIX,claude.app,US-FIXED
+DOMAIN-SUFFIX,claudemcpcontent.com,US-FIXED
+DOMAIN-SUFFIX,anthropic.com,US-FIXED
+DOMAIN-SUFFIX,claudeusercontent.com,US-FIXED
+DOMAIN-SUFFIX,anthropicusercontent.com,US-FIXED
+
+# 保留原 Apple Relay 例外，优先于 apple.com 的宽泛 DIRECT。
+DOMAIN-SUFFIX,apple-relay.apple.com,PROXY
+
+# 国内业务
 DOMAIN-SUFFIX,flova.tv,DIRECT
 DOMAIN-SUFFIX,bilibili.com,DIRECT
 DOMAIN-SUFFIX,biliapi.com,DIRECT
@@ -25,5 +40,55 @@ DOMAIN-SUFFIX,hdslb.com,DIRECT
 DOMAIN-SUFFIX,acgvideo.com,DIRECT
 DOMAIN-SUFFIX,b23.tv,DIRECT
 DOMAIN-SUFFIX,biliimg.com,DIRECT
+DOMAIN-SUFFIX,bilibili.tv,DIRECT
+DOMAIN-SUFFIX,feishu.cn,DIRECT
+DOMAIN-SUFFIX,douyin.com,DIRECT
+DOMAIN-SUFFIX,douyinvod.com,DIRECT
+DOMAIN-SUFFIX,douyinpic.com,DIRECT
+DOMAIN-SUFFIX,douyinstatic.com,DIRECT
+DOMAIN-SUFFIX,iesdouyin.com,DIRECT
+DOMAIN-SUFFIX,xiaohongshu.com,DIRECT
+DOMAIN-SUFFIX,xhscdn.com,DIRECT
+DOMAIN-SUFFIX,xhslink.com,DIRECT
+DOMAIN-SUFFIX,workbuddy.cn,DIRECT
+DOMAIN-SUFFIX,codebuddy.cn,DIRECT
+DOMAIN-SUFFIX,skillhub.cn,DIRECT
+DOMAIN-SUFFIX,tencent.com,DIRECT
+DOMAIN-SUFFIX,qq.com,DIRECT
+DOMAIN-SUFFIX,tencent-cloud.net,DIRECT
+DOMAIN-SUFFIX,apple.com,DIRECT
+DOMAIN-SUFFIX,apple.com.cn,DIRECT
+DOMAIN-SUFFIX,cdn-apple.com,DIRECT
 DOMAIN,myip.ipip.net,DIRECT
-# 保留现有GEOIP和FINAL；本文件只提供插在它们前面的域名规则。
+# 保留你原有的 GEOIP / FINAL；这些规则必须在它们之前。
+
+[Host]
+service.flova.tv = server:223.5.5.5
+appleid.cdn-apple.com = server:223.5.5.5
+www.apple.com = server:223.5.5.5
+copilot.tencent.com = server:223.5.5.5
+staging-copilot.tencent.com = server:223.5.5.5
+workbuddy.cn = server:223.5.5.5
+*.workbuddy.cn = server:223.5.5.5
+codebuddy.cn = server:223.5.5.5
+*.codebuddy.cn = server:223.5.5.5
+skillhub.cn = server:223.5.5.5
+*.skillhub.cn = server:223.5.5.5
+xiaohongshu.com = server:223.5.5.5
+*.xiaohongshu.com = server:223.5.5.5
+xhscdn.com = server:223.5.5.5
+*.xhscdn.com = server:223.5.5.5
+xhslink.com = server:223.5.5.5
+*.xhslink.com = server:223.5.5.5
+feishu.cn = server:223.5.5.5
+*.feishu.cn = server:223.5.5.5
+douyin.com = server:223.5.5.5
+*.douyin.com = server:223.5.5.5
+douyinvod.com = server:223.5.5.5
+*.douyinvod.com = server:223.5.5.5
+douyinpic.com = server:223.5.5.5
+*.douyinpic.com = server:223.5.5.5
+douyinstatic.com = server:223.5.5.5
+*.douyinstatic.com = server:223.5.5.5
+iesdouyin.com = server:223.5.5.5
+*.iesdouyin.com = server:223.5.5.5

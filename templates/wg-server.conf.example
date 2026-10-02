@@ -1,3 +1,4 @@
+# 历史 WireGuard 方案；不用于当前 Trojan/TCP/TLS 迁移。新机器请先读 docs/另一台Mac部署.md。
 # 占位模板，不可直接启动。NAT/转发/防火墙按实际网卡另行配置。
 [Interface]
 Address = <SERVER_TUNNEL_ADDRESS_CIDR>
