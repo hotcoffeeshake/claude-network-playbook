@@ -64,6 +64,8 @@ DOMAIN,myip.ipip.net,DIRECT
 
 [Host]
 service.flova.tv = server:223.5.5.5
+cdn-ap.flova.tv = server:223.5.5.5
+static-cdn-ap.flova.tv = server:223.5.5.5
 appleid.cdn-apple.com = server:223.5.5.5
 www.apple.com = server:223.5.5.5
 copilot.tencent.com = server:223.5.5.5

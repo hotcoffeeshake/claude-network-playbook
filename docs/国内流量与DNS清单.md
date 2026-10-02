@@ -6,7 +6,7 @@
 
 | 服务 | 国内直连域名 | 国内 DNS 例外 | 验证边界 |
 |---|---|---|---|
-| Flova | `flova.tv` 及子域 | 仅 `service.flova.tv` | API 账户查询曾实测成功；上传及其他 CDN 单独测试 |
+| Flova | `flova.tv` 及子域 | `service.flova.tv`、`cdn-ap.flova.tv`、`static-cdn-ap.flova.tv` | API 账户查询曾实测成功；10月2日原始 PNG 完整下载与 CRC 校验通过；static CDN 仅验证 TLS/HTTP，上传及其他 CDN 单独测试 |
 | Bilibili | `bilibili.com`、`biliapi.com`、`biliapi.net`、`bilivideo.com`、`bilivideo.cn`、`hdslb.com`、`acgvideo.com`、`b23.tv`、`biliimg.com`、`bilibili.tv` | 当前无专属覆写，使用默认 DNS | 分流规则已核对；所有视频/CDN 未逐项验收 |
 | 飞书 | `feishu.cn` 及子域 | 根域及通配子域 → 国内 DNS | 其他上传/CDN、国际 Lark 不自动纳入 |
 | 抖音 | `douyin.com`、`douyinvod.com`、`douyinpic.com`、`douyinstatic.com`、`iesdouyin.com` | 根域及通配子域 → 国内 DNS | 不等同于 TikTok 全部域名 |
