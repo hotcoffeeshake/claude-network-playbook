@@ -17,7 +17,7 @@ cd claude-network-playbook
 python3 --version
 ```
 
-私有仓库使用自己的 GitHub 登录权限。克隆后不会自动安装保护。
+本仓库公开可读，HTTPS 克隆不需要仓库成员权限；提交修改仍需相应授权。克隆后不会自动安装保护。
 
 ## 1. 先让固定节点独立可用
 
