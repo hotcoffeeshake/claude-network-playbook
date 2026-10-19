@@ -1,0 +1,57 @@
+#!/bin/sh
+set -eu
+umask 077
+
+LINEAGE="$RENEWED_LINEAGE"
+TLS_NAME=$(cat /etc/personal-trojan/tls-name)
+BASE=/etc/personal-trojan/certs
+NEXT=$(mktemp -d "$BASE/generation.XXXXXXXX")
+OLD=$(readlink "$BASE/current" 2>/dev/null || true)
+
+cleanup() {
+  test -d "$NEXT" && rm -rf "$NEXT"
+}
+trap cleanup EXIT INT TERM
+
+openssl x509 -in "$LINEAGE/cert.pem" -noout -checkhost "$TLS_NAME" >/dev/null
+openssl x509 -in "$LINEAGE/cert.pem" -noout -checkend 172800 >/dev/null
+openssl verify -CApath /etc/ssl/certs -untrusted "$LINEAGE/chain.pem" "$LINEAGE/cert.pem" >/dev/null
+CERT_PUB=$(openssl x509 -in "$LINEAGE/cert.pem" -pubkey -noout | openssl pkey -pubin -outform DER | sha256sum)
+KEY_PUB=$(openssl pkey -in "$LINEAGE/privkey.pem" -pubout -outform DER | sha256sum)
+test "$CERT_PUB" = "$KEY_PUB"
+
+chown root:personal-trojan "$NEXT"
+chmod 750 "$NEXT"
+install -o root -g personal-trojan -m 640 "$LINEAGE/fullchain.pem" "$NEXT/fullchain.pem"
+install -o root -g personal-trojan -m 640 "$LINEAGE/privkey.pem" "$NEXT/privkey.pem"
+ln -s "$NEXT" "$BASE/current.new"
+mv -Tf "$BASE/current.new" "$BASE/current"
+NEXT=
+
+rollback() {
+  if test -n "$OLD"; then
+    ln -s "$OLD" "$BASE/current.rollback"
+    mv -Tf "$BASE/current.rollback" "$BASE/current"
+    systemctl restart personal-trojan.service || true
+  fi
+}
+
+if ! runuser -u personal-trojan -- /usr/bin/sing-box check -c /etc/personal-trojan/config.json; then
+  rollback
+  exit 1
+fi
+if ! systemctl restart personal-trojan.service; then
+  rollback
+  exit 1
+fi
+sleep 2
+if ! systemctl is-active --quiet personal-trojan.service; then
+  rollback
+  exit 1
+fi
+if ! timeout 12 openssl s_client -connect 127.0.0.1:443 -servername "$TLS_NAME" -verify_hostname "$TLS_NAME" -verify_return_error -CApath /etc/ssl/certs </dev/null >/dev/null 2>&1; then
+  rollback
+  exit 1
+fi
+
+logger -t personal-trojan "validated certificate deployed; service active"

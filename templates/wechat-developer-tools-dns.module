@@ -1,0 +1,6 @@
+#!name=WeChat Developer Tools DNS
+#!desc=Use AliDNS for servicewechat.com while preserving the existing DIRECT route.
+
+[Host]
+servicewechat.com = server:223.5.5.5
+*.servicewechat.com = server:223.5.5.5

@@ -1,6 +1,6 @@
 # 国内流量与 DNS 清单
 
-日期：2026-10-02。DIRECT 表示从设备当前网络直连。在中国宽带上通常显示国内出口；到国外或叠加其他 VPN 时须重新测量，不能保证仍是中国 IP。
+日期：2026-10-07。DIRECT 表示从设备当前网络直连。在中国宽带上通常显示国内出口；到国外或叠加其他 VPN 时须重新测量，不能保证仍是中国 IP。
 
 本表记录当前 Mac 核对到的规则和随仓库提供的显式模板。公开域名不含账号或凭据。模板不是整个现有订阅规则库的导出。
 
@@ -12,6 +12,7 @@
 | 抖音 | `douyin.com`、`douyinvod.com`、`douyinpic.com`、`douyinstatic.com`、`iesdouyin.com` | 根域及通配子域 → 国内 DNS | 不等同于 TikTok 全部域名 |
 | 小红书 | `xiaohongshu.com`、`xhscdn.com`、`xhslink.com` | 根域及通配子域 → 国内 DNS | 首页、短链和 CDN 连通曾测试；不代表所有业务 |
 | WorkBuddy / CodeBuddy | `workbuddy.cn`、`codebuddy.cn`、`skillhub.cn`、`copilot.tencent.com`、`staging-copilot.tencent.com` | 前三者根域及通配子域、后两者精确域名 → 国内 DNS | 10月2日桌面同步握手、签到查询、技能列表恢复；模型生成未单独验收 |
+| 微信开发者工具 | `servicewechat.com` 及子域 | `servicewechat.com`、`*.servicewechat.com` → 国内 DNS | 10月7日日志确认业务请求已命中 DIRECT，但默认海外 DoH 同时返回 IPv4/IPv6，随后在 TLS 建立前发生 `ECONNRESET`；本轮只补最小 DNS 范围，不覆盖全部腾讯域名 |
 | 腾讯/QQ基础域名 | `tencent.com`、`qq.com`、`tencent-cloud.net` | 仅上述 copilot 两个域名有例外 | 当前已有国内规则；不代表所有腾讯业务/CDN |
 | Apple 登录/网站 | `apple.com`、`apple.com.cn`、`cdn-apple.com` | `appleid.cdn-apple.com`、`www.apple.com` | 来自现有直连规则；不代表 Claude 的 Apple 登录整条链路已验收 |
 | 国内出口检测 | `myip.ipip.net` | 无额外覆写 | 用来检查 DIRECT；不应期待它显示美国 |
@@ -20,7 +21,7 @@
 
 ## 为什么不能只写 DIRECT
 
-Flova 和 WorkBuddy 曾命中 DIRECT，却由海外 DoH 返回不适合当前国内路径的地址，造成 TLS 失败、延迟或同步断开。指定国内 DNS 后，这些业务仍然 DIRECT，但能选择国内 CDN。临时 curl --resolve 对照可以定位，长期规则不应写死短期 CDN 地址。
+Flova、WorkBuddy 和微信开发者工具都出现过“规则命中 DIRECT，但 DNS 仍走海外 DoH”的情况。前两者曾因此出现 TLS 失败、延迟或同步断开；微信开发者工具日志显示在安全 TLS 连接建立前发生 `ECONNRESET`。指定国内 DNS 后，业务仍然 DIRECT，但解析路径与国内直连一致。临时 curl --resolve 对照可以定位，长期规则不应写死短期 CDN 地址。
 
 ## 同时保留的美国流量
 
@@ -30,6 +31,6 @@ Flova 和 WorkBuddy 曾命中 DIRECT，却由海外 DoH 返回不适合当前国
 
 ## 新域名怎么补
 
-先重现一次失败，在 Shadowrocket 查请求域名、首条命中规则及 DNS 来源；无凭据比较默认路径和国内 DNS 地址，证书校验保持开启。确认属于预期国内业务后，仅补该服务的最小域名范围。不要为省事把全部 `.com`、腾讯云所有 IP 或 Claude 进程都设为 DIRECT。
+先重现一次失败，在 Shadowrocket 查请求域名、首条命中规则及 DNS 来源；无凭据比较默认路径和国内 DNS 地址，证书校验保持开启。确认属于预期国内业务后，仅补该服务的最小域名范围。微信开发者工具当前只补 `servicewechat.com` 与其子域，不扩展到全部 `qq.com`、`weixin.qq.com` 或腾讯云 IP。不要为省事把全部 `.com` 或 Claude 进程设为 DIRECT。
 
 国内网站可见国内出口，不表示 Claude 模型请求也直连；两者分开查看。反过来，单独检测站显示美国也不能替所有进程证明固定出口。

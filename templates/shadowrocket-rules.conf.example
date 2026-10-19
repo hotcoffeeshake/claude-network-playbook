@@ -63,6 +63,9 @@ DOMAIN,myip.ipip.net,DIRECT
 # 保留你原有的 GEOIP / FINAL；这些规则必须在它们之前。
 
 [Host]
+# 微信开发者工具：业务规则保持 DIRECT，解析单独使用国内 DNS。
+servicewechat.com = server:223.5.5.5
+*.servicewechat.com = server:223.5.5.5
 service.flova.tv = server:223.5.5.5
 cdn-ap.flova.tv = server:223.5.5.5
 static-cdn-ap.flova.tv = server:223.5.5.5

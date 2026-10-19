@@ -1,0 +1,69 @@
+{
+  "log": {
+    "level": "warn",
+    "timestamp": true
+  },
+  "inbounds": [
+    {
+      "type": "trojan",
+      "tag": "personal-tls",
+      "listen": "0.0.0.0",
+      "listen_port": 443,
+      "users": [
+        {
+          "name": "<DEVICE_NAME>",
+          "password": "<DEVICE_PASSWORD>"
+        }
+      ],
+      "tls": {
+        "enabled": true,
+        "min_version": "1.2",
+        "certificate_path": "/etc/personal-trojan/certs/current/fullchain.pem",
+        "key_path": "/etc/personal-trojan/certs/current/privkey.pem"
+      }
+    }
+  ],
+  "dns": {
+    "servers": [
+      {
+        "type": "local",
+        "tag": "local"
+      }
+    ],
+    "final": "local",
+    "strategy": "ipv4_only"
+  },
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "internet"
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "action": "resolve",
+        "strategy": "ipv4_only"
+      },
+      {
+        "ip_is_private": true,
+        "action": "reject"
+      },
+      {
+        "ip_cidr": [
+          "0.0.0.0/8",
+          "100.64.0.0/10",
+          "127.0.0.0/8",
+          "169.254.0.0/16",
+          "198.18.0.0/15",
+          "224.0.0.0/4",
+          "240.0.0.0/4",
+          "<STATIC_IPV4>/32",
+          "::/0"
+        ],
+        "action": "reject"
+      }
+    ],
+    "final": "internet"
+  }
+}

@@ -1,6 +1,6 @@
 # 另一台 Mac 部署与验收
 
-版本：2026-10-02。目标：在另一台 Mac 重建当前的固定节点分流与应用直连限制。**不包含运行中 IP 改变自动断流。** 适用于你已有可用美国 TLS VPS 的情况；只有仓库、没有节点凭据时不能完成连接。
+版本：2026-10-19。目标：在另一台 Mac 重建当前的固定节点分流与应用直连限制。**不包含运行中 IP 改变自动断流。** 建议直接按[第二台 Mac 完整执行清单](第二台Mac完整执行清单.md)操作；本文保留详细原理和验收边界。适用于你已有可用美国 TLS VPS 的情况；只有仓库、没有节点凭据时不能完成连接。
 
 ## 0. 必须先准备
 
@@ -15,6 +15,7 @@
 git clone https://github.com/hotcoffeeshake/claude-network-playbook.git
 cd claude-network-playbook
 python3 --version
+python3 scripts/validate_public_bundle.py
 ```
 
 本仓库公开可读，HTTPS 克隆不需要仓库成员权限；提交修改仍需相应授权。克隆后不会自动安装保护。
@@ -23,7 +24,7 @@ python3 --version
 
 在 Shadowrocket 导入这台 Mac 的 Trojan 节点，命名 `MY-US-TLS-FIXED`。核对 TCP 443、证书验证开启、验证名称与证书 SAN 一致。IP 证书与域名证书的填法不同，不能凭模板关闭校验。不要复制 WireGuard 类型后只改节点名字。
 
-不要复用手机二维码作为另一台电脑的正式身份；让服务器管理员添加独立凭据以便单独撤销。只有需要新建 VPS 时才另行部署服务端，见[操作手册](操作手册.md)。
+不要复用手机二维码作为另一台电脑的正式身份；让服务器管理员添加独立凭据以便单独撤销。需要新建 VPS 时见[AWS 服务端部署](AWS-Lightsail与Trojan服务端部署.md)。
 
 ## 2. 合并分流与 DNS
 
